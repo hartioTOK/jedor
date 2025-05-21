@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Surat Cinta Romantis & Lucu</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Pacifico&display=swap');
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+      font-family: 'Comic Neue', cursive;
+      color: #5a1a01;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff3f0;
+      padding: 40px 30px;
+      border-radius: 25px;
+      box-shadow: 0 12px 35px rgba(255,105,180,0.5);
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      margin-bottom: 0.1em;
+      color: #ff4060;
+      text-shadow: 2px 2px 3px #ffbdd1;
+    }
+
+    p.subtitle {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #ad4b57;
+    }
+
+    button {
+      background-color: #ff4d6d;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 12px 30px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px #cc3e58;
+      transition: transform 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    button:active {
+      box-shadow: 0 3px #cc3e58;
+      transform: translateY(3px);
+    }
+
+    .love-message {
+      margin-top: 40px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #a3404b;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      display: none;
+    }
+
+    .love-message.show {
+      display: block;
+      opacity: 1;
+    }
+
+    textarea {
+      margin-top: 30px;
+      width: 100%;
+      min-height: 90px;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 20px;
+      border: 2px solid #ffabc1;
+      resize: vertical;
+      font-family: 'Comic Neue', cursive;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #ff4d6d;
+    }
+
+    .reply-result {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #9c3353;
+      white-space: pre-line;
+      min-height: 60px;
+    }
+
+    .confetti-container, #hearts-container {
+      pointer-events: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+
+    .confetti {
+      position: absolute;
+      background-color: #ff407f;
+      opacity: 0.8;
+      border-radius: 3px;
+      animation-name: drop;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes drop {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes fly-up {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-150px); opacity: 0; }
+    }
+
+    @media (max-width: 400px) {
+      h1 { font-size: 2.2rem; }
+      .container { padding: 30px 20px; }
+      button { font-size: 1rem; padding: 10px 20px; }
+      textarea { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sayangku!</h1>
+    <p class="subtitle">cindyy jadi ceweku yaa? 💖</p>
+    <button id="send-love">jawab disini</button>
+
+    <div class="love-message" id="love-message">
+      <p>“Aku sayang banget sama cindy, sama aku terus yaaa???ԅ(¯﹃¯ԅ)”</p>
+    </div>
+
+    <textarea id="reply-text" placeholder="Tulis kata hatimu disini...."></textarea>
+    <button id="submit-reply">Kirim Balasan</button>
+    <button id="download-reply" style="display: none;">Simpan Balasan 💾</button>
+
+    <div class="reply-result" id="reply-result"></div>
+  </div>
+
+  <div class="confetti-container" id="confetti-container"></div>
+  <div id="hearts-container"></div>
+
+  <script>
+    const sendBtn = document.getElementById('send-love');
+    const loveMessage = document.getElementById('love-message');
+    const replyText = document.getElementById('reply-text');
+    const submitReply = document.getElementById('submit-reply');
+    const replyResult = document.getElementById('reply-result');
+    const confettiContainer = document.getElementById('confetti-container');
+    const downloadBtn = document.getElementById('download-reply');
+
+    // Link Google Form untuk kamu akses sendiri, gak ditampilkan ke user
+    const googleFormLink = "https://forms.gle/pKkDetWVTvvfmaxW8";
+
+    loveMessage.style.display = 'none';
+    replyText.style.display = 'none';
+    submitReply.style.display = 'none';
+
+    sendBtn.addEventListener('click', () => {
+      loveMessage.classList.add('show');
+      replyText.style.display = 'block';
+      submitReply.style.display = 'inline-block';
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Isi Hatimu Terkirim! 🎉';
+      launchConfetti();
+      replyText.focus();
+      replyResult.textContent = '';
+      replyText.value = '';
+      replyText.disabled = false;
+      submitReply.disabled = false;
+      downloadBtn.style.display = 'none';
+    });
+
+    submitReply.addEventListener('click', () => {
+      const reply = replyText.value.trim();
+      if(reply === ''){
+        alert('Jangan lupa tulis balasannya ya!');
+        replyText.focus();
+        return;
+      }
+      replyResult.textContent = 'Balasan kamu:\n"' + reply + '"';
+      replyText.disabled = true;
+      submitReply.disabled = true;
+      submitReply.textContent = 'Balasan Terkirim 💌';
+      launchHearts();
+      downloadBtn.style.display = 'inline-block';
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const reply = replyText.value.trim();
+      if(reply !== ''){
+        const blob = new Blob([reply], {type: "text/plain"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "balasan_cinta_dari_doi.txt";
+        a.click();
+      }
+    });
+
+    function launchConfetti(){
+      confettiContainer.innerHTML = '';
+      const colors = ['#FF4060', '#FFAC41', '#FF7E5F', '#FF6F91', '#FFC75F', '#845EC2'];
+      const count = 60;
+      for(let i=0; i<count; i++){
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+        confetti.style.left = Math.random()*100 + 'vw';
+        confetti.style.animationDuration = (Math.random()*3+2)+'s';
+        confetti.style.animationDelay = (Math.random()*5)+'s';
+        confetti.style.width = (5 + Math.random()*7) + 'px';
+        confetti.style.height = (7 + Math.random()*10) + 'px';
+        confetti.style.borderRadius = (Math.random()*50) + '%';
+        confettiContainer.appendChild(confetti);
+      }
+      setTimeout(() => { confettiContainer.innerHTML = ''; }, 7000);
+    }
+
+    function launchHearts() {
+      const heartContainer = document.getElementById('hearts-container');
+      for(let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.textContent = '💖';
+        heart.style.position = 'absolute';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.fontSize = (20 + Math.random() * 20) + 'px';
+        heart.style.opacity = 1;
+        heart.style.animation = `fly-up ${2 + Math.random() * 2}s ease forwards`;
+        heartContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }
+    }
+
+    // Tombol rahasia untuk buka Google Form (disembunyikan dari user)
+    const secretBtn = document.createElement('button');
+    secretBtn.textContent = "Buka Google Form (Rahasia)";
+    secretBtn.style.display = "none"; // sembunyikan
+    secretBtn.style.position = "fixed";
+    secretBtn.style.bottom = "10px";
+    secretBtn.style.right = "10px";
+    secretBtn.style.padding = "8px 12px";
+    secretBtn.style.backgroundColor = "#ff4d6d";
+    secretBtn.style.color = "white";
+    secretBtn.style.border = "none";
+    secretBtn.style.borderRadius = "8px";
+    secretBtn.style.cursor = "pointer";
+    document.body.appendChild(secretBtn);
+
+    secretBtn.addEventListener('click', () => {
+      window.open(googleFormLink, '_blank');
+    });
+
+    // Kalau mau aktifin tombol rahasia ini, buka console browser dan ketik:
+    // document.querySelector('button[style*="fixed"]').style.display = 'inline-block';
+  </script>
+</body>
+</html>
